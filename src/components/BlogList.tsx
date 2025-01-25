@@ -14,7 +14,7 @@ const BlogList: FC<BlogListProps> = ({ blogs }) => {
           <BlogCard key={index} blog={blog} />
         ))}
       </div>
-    </section>  
+    </section>
   );
 };
 
