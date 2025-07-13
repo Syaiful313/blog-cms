@@ -11,13 +11,14 @@ import { notFound } from "next/navigation";
 import { FC } from "react";
 
 interface BlogDetailProps {
-  params: { entryid: string };
+  params: Promise<{ entryid: string }>;
 }
 
 export async function generateMetadata({
   params,
 }: BlogDetailProps): Promise<Metadata> {
-  const blog = await getEntry(params.entryid);
+  const resolvedParams = await params;
+  const blog = await getEntry(resolvedParams.entryid);
 
   if (!blog) {
     return notFound();
@@ -33,7 +34,8 @@ export async function generateMetadata({
 }
 
 const BlogDetail: FC<BlogDetailProps> = async ({ params }) => {
-  const blog = await getEntry(params.entryid);
+  const resolvedParams = await params;
+  const blog = await getEntry(resolvedParams.entryid);
 
   if (!blog) {
     return notFound();

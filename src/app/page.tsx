@@ -4,11 +4,12 @@ import PaginationSection from "@/components/PaginationSection";
 import { getEntries } from "@/lib/contentful";
 
 interface HomeProps {
-  searchParams: { [key: string]: string };
+  searchParams: Promise<{ [key: string]: string }>;
 }
 
-export default async function Home({searchParams}: HomeProps) {
-  const blogs = await getEntries(Number(searchParams.page) || 1);
+export default async function Home({ searchParams }: HomeProps) {
+  const resolvedSearchParams = await searchParams;
+  const blogs = await getEntries(Number(resolvedSearchParams.page) || 1);
 
   return (
     <main>
