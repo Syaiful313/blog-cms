@@ -1,46 +1,74 @@
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
-import { Menu } from "lucide-react";
+"use client";
+import { ChefHat, Menu, X } from "lucide-react";
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { useState } from "react";
+
+const MenuItems = [
+  { name: "Home", href: "/" },
+  { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact" },
+];
 
 const Navbar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
-    <nav className="container mx-auto p-4">
+    <nav className="container mx-auto py-4 px-4 sm:py-8">
       <div className="flex items-center justify-between">
-        <Link href="/">
-          <h1 className="text-3xl font-bold">FoodHub</h1>
+        {/* Logo */}
+        <Link href="/" className="flex items-center space-x-2">
+          <ChefHat className="h-8 w-8 sm:h-10 sm:w-10" />
+          <h1 className="text-2xl sm:text-4xl font-bold">foodHub</h1>
         </Link>
 
-        <div className="hidden items-center gap-4 md:flex">
-          <Link href="/ ">Home</Link>
-          <Link href="/">About</Link>
-          <Link href="/">Contact</Link>
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center space-x-8">
+          {MenuItems.map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              className="font-sans text-base transition-colors hover:text-orange-500"
+            >
+              {item.name}
+            </Link>
+          ))}
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger className="block md:hidden" asChild>
-            <Button variant="outline" size="icon">
-              <Menu />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <Link href="/ ">
-              <DropdownMenuItem>Home</DropdownMenuItem>
-            </Link>
-            <Link href="/">
-              <DropdownMenuItem>About</DropdownMenuItem>
-            </Link>
-            <Link href="/">
-              <DropdownMenuItem>Contact</DropdownMenuItem>
-            </Link>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {/* Mobile Menu Button */}
+        <button
+          onClick={toggleMenu}
+          className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          aria-label="Toggle menu"
+        >
+          {isMenuOpen ? (
+            <X className="h-6 w-6" />
+          ) : (
+            <Menu className="h-6 w-6" />
+          )}
+        </button>
       </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="md:hidden mt-4 pb-4">
+          <div className="flex flex-col space-y-4">
+            {MenuItems.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className="font-sans text-base transition-colors hover:text-orange-500 py-2 px-4 rounded-lg hover:bg-gray-50"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {item.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
